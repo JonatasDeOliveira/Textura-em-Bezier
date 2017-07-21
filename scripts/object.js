@@ -7,6 +7,9 @@ function Object(points, pointsTriangle) {
     
     this.calcTriangle = function(){
         var triangle;
+        for(var i=0; i<this.points.length; i++) {
+            this.points[i] = camera.changeCoord(this.points[i]);
+        }
         for(var i=0; i<this.pointsTriangle.length; i++){
             var ia = this.pointsTriangle[i][0]-1;
             var ib = this.pointsTriangle[i][1]-1;
@@ -20,6 +23,9 @@ function Object(points, pointsTriangle) {
                 this.points[ib].normal = this.points[ib].normal.add(triangle.normal);
                 this.points[ic].normal = this.points[ic].normal.add(triangle.normal);
             }
+        }
+        for(var i=0; i<this.points.length; i++) {
+            this.points[i].normal = this.points[i].normal.normalize();
         }
         for(var i=0; i<this.pointsTriangle.length; i++){
             var a = this.points[this.pointsTriangle[i][0]-1];

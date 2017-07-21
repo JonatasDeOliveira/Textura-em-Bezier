@@ -75,4 +75,9 @@ function Vector(x, y, z){
 		var norma = Math.sqrt(sProd);
 		return norma; 
 	};
+	
+	//Metodo que retira a norma de um vetor
+	this.clone = function(){
+		return (new Vector(this.x, this.y, this.z)); 
+	};
 }

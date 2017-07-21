@@ -45,16 +45,12 @@ function Surface(controlPoints, evaluation){
                     var bernS = this.bernstein(n, i, s);
                     for (var j=0; j<=m; j++){
                         var bernT = this.bernstein(m, j, t);
-                        var a = controlPoints[i][j].scalarMulti(bernS * bernT); 
-                        point.x += a.x; 
-                        point.y += controlPoints[i][j].scalarMulti(bernS * bernT).y;
-                        point.z += controlPoints[i][j].scalarMulti(bernS * bernT).z; 
-                        //point = point.add(controlPoints[i][j].scalarMulti(bernS * bernT));
+                        point = point.add(controlPoints[i][j].scalarMulti(bernS * bernT));
                     }
                 }
                 point.s = s;
                 point.t = t;
-                this.mesh[this.mesh.length-1].push(point);
+                this.mesh[this.mesh.length-1].push(camera.changeCoord(point));
             }
         }
     };
@@ -79,6 +75,11 @@ function Surface(controlPoints, evaluation){
                     this.mesh[i+1][j].normal = this.mesh[i+1][j].normal.add(t2.normal);
                     this.mesh[i][j+1].normal = this.mesh[i][j+1].normal.add(t2.normal);
                 }
+            }
+        }
+        for (var i=0 ; i<=maxS ; i++){
+            for(var j=0 ; j<=maxT ; j++){
+                this.mesh[i][j].normal = this.mesh[i][j].normal.normalize();
             }
         }
         for (var i=0 ; i<maxS ; i++){

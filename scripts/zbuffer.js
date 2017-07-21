@@ -1,6 +1,7 @@
-var zbuffer = [];
+var zbuffer;
 
 function initZbuffer(){
+  zbuffer = [];
 	for(var i = 0; i<width; i++){
 		zbuffer.push([]); 
 		for(var j = 0; j<height; j++){
@@ -10,7 +11,6 @@ function initZbuffer(){
 }
 
 function processTriangle (triangle){
-    console.log(triangle); 
     var p1 = triangle.a;
     var p2 = triangle.b; 
     var p3 = triangle.c; 
@@ -110,7 +110,7 @@ function scanline (y, xmin, xmax,p1, p2, p3){
         a = Math.floor(x); 
         b = Math.floor(y); 
         if(zbuffer[a][b] > p3D.z){
-            zbuffer[a][b] = p3D.z; 
+            zbuffer[a][b] = p3D.z;
             
             var nx = triangle.a.normal.x*bar[0] + triangle.b.normal.x*bar[1] + triangle.c.normal.x*bar[2];
             var ny = triangle.a.normal.y*bar[0] + triangle.b.normal.y*bar[1] + triangle.c.normal.y*bar[2];
@@ -119,8 +119,8 @@ function scanline (y, xmin, xmax,p1, p2, p3){
             var n = new Vector(nx, ny, nz); 
             p3D.normal = n; 
             
-            var v = new Vector (-p3D.x, -p3D.y, -p3D.z); 
-            var lp = lighting.pl;
+            var v = new Vector(-p3D.x, -p3D.y, -p3D.z); 
+            var lp = camera.changeCoord(lighting.pl);
             var l = new Vector(lp.x - p3D.x, lp.y - p3D.y, lp.z - p3D.z); 
             
             n = n.normalize(); 
@@ -134,14 +134,14 @@ function scanline (y, xmin, xmax,p1, p2, p3){
             
             if(!type){
                 var barS = p13D.s*bar[0] + p23D.s*bar[1] + p33D.s*bar[2];
-                var barT = p13D.t*bar[0] + p23D.t*bar[1] + p33D.t*bar[2];  
+                var barT = p13D.t*bar[0] + p23D.t*bar[1] + p33D.t*bar[2];
                 lighting.ia = texture.getRGB(barS, barT);
-                lighting.ka = 0.5;
+            } else {
+                lighting.ia = lighting.backupIA;
             }
+            
             var color = lighting.phong(n, v, l);
             paint(x, y, color); 
         }
-        
     }
-   
 }
